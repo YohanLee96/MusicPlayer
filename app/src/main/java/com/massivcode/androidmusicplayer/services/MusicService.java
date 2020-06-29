@@ -55,6 +55,7 @@ import com.massivcode.androidmusicplayer.receiver.UnPlugReceiver;
 import com.massivcode.androidmusicplayer.utils.DataBackupUtil;
 import com.massivcode.androidmusicplayer.utils.MusicInfoLoadUtil;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
@@ -660,11 +661,14 @@ public class MusicService extends Service implements MediaPlayer.OnCompletionLis
         // Set the Notification color
         builder.setColor(Color.parseColor("#2196F3"));
         // Set the large and small icons
+        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+
+
+
         Bitmap bitmap = MusicInfoLoadUtil.getBitmap(getApplicationContext(), mCurrentMusicInfo.getUri(), 4);
         if (bitmap == null) {
             bitmap = BitmapFactory.decodeResource(getResources(), R.mipmap.ic_no_image);
         }
-        builder.setLargeIcon(bitmap);
         builder.setSmallIcon(R.mipmap.ic_no_image);
         builder.setContentTitle(mCurrentMusicInfo.getTitle());
         builder.setContentText(mCurrentMusicInfo.getArtist());
