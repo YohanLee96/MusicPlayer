@@ -34,6 +34,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.logging.Logger;
 
 
 public class MusicInfoLoadUtil {
@@ -81,23 +82,35 @@ public class MusicInfoLoadUtil {
      */
     public static HashMap<Long, MusicInfo> getAllMusicInfo(Context context) {
         HashMap<Long, MusicInfo> map = new HashMap<>();
+        Uri audioContentUri =  MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
+        //안드로이드에 있는 오디오파일 불러오기
         Cursor cursor = context.getContentResolver().query(
                 MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
                 projection,
                 MediaStore.Audio.Media.ARTIST + " != ? AND " + MediaStore.Audio.Media.TITLE + " NOT LIKE '%" + "hangout" + "%'" ,
-                new String[]{MediaStore.UNKNOWN_STRING}, null
+                new String[]{MediaStore.UNKNOWN_STRING},
+                null
         );
+//        Cursor cursor = context.getContentResolver().query(
+//                audioContentUri,
+//                projection,
+//                null,
+//                null,
+//                null);
 
 
-        if (cursor != null || cursor.getCount() != 0)
+        //오디오파일이 있을 경우..
+        if (cursor != null && cursor.getCount() != 0)
             while (cursor.moveToNext()) {
 
                 long _id = cursor.getLong(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media._ID));
                 Uri uri = Uri.parse("content://media/external/audio/media/" + _id);
+
                 String artist = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.ARTIST));
                 String title = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.TITLE));
                 String album = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.ALBUM));
                 String duration = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.DURATION));
+       //         Logger.getLogger("불러온 타이틀 :", title);
                 if (duration != null) {
                     MusicInfo musicInfo = new MusicInfo(_id, uri, artist, title, album, Integer.parseInt(duration));
                     map.put(_id, musicInfo);
