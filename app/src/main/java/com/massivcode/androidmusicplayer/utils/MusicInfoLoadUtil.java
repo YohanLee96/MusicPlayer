@@ -30,6 +30,7 @@ import com.massivcode.androidmusicplayer.database.MyPlaylistContract;
 import com.massivcode.androidmusicplayer.database.MyPlaylistFacade;
 import com.massivcode.androidmusicplayer.models.MusicInfo;
 
+import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -82,15 +83,13 @@ public class MusicInfoLoadUtil {
      */
     public static HashMap<Long, MusicInfo> getAllMusicInfo(Context context) {
         HashMap<Long, MusicInfo> map = new HashMap<>();
-        Uri audioContentUri =  MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
         //안드로이드에 있는 오디오파일 불러오기
         Cursor cursor = context.getContentResolver().query(
                 MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
                 projection,
                 MediaStore.Audio.Media.ARTIST + " != ? AND " + MediaStore.Audio.Media.TITLE + " NOT LIKE '%" + "hangout" + "%'" ,
                 new String[]{MediaStore.UNKNOWN_STRING},
-                null
-        );
+                null);
 //        Cursor cursor = context.getContentResolver().query(
 //                audioContentUri,
 //                projection,
@@ -103,8 +102,9 @@ public class MusicInfoLoadUtil {
         if (cursor != null && cursor.getCount() != 0)
             while (cursor.moveToNext()) {
 
-                long _id = cursor.getLong(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media._ID));
-                Uri uri = Uri.parse("content://media/external/audio/media/" + _id);
+                Long _id = cursor.getLong(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media._ID));
+               // Uri uri = Uri.parse("content://media/external/audio/media/" + _id);
+                Uri uri = Uri.withAppendedPath(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, _id.toString());
 
                 String artist = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.ARTIST));
                 String title = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.TITLE));
@@ -249,7 +249,12 @@ public class MusicInfoLoadUtil {
      */
     public static MusicInfo getSelectedMusicInfo(Context context, long id) {
         MusicInfo musicInfo = null;
-        Cursor cursor = context.getContentResolver().query(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, projection, selection, new String[]{String.valueOf(id)}, null);
+        Cursor cursor = context.getContentResolver().query(
+                MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
+                projection,
+                selection,
+                new String[]{String.valueOf(id)},
+                null);
         if (cursor != null || cursor.getCount() != 0) {
 
             cursor.moveToFirst();
@@ -263,7 +268,7 @@ public class MusicInfoLoadUtil {
             MediaMetadataRetriever retriever = new MediaMetadataRetriever();
             retriever.setDataSource(context, uri);
 
-            byte[] albumArt = retriever.getEmbeddedPicture();
+            byte[] albumArt = new byte[1000];//retriever.getEmbeddedPicture();
 
             if(duration != null) {
                 musicInfo = new MusicInfo(_id, uri, artist, title, album, albumArt, Integer.parseInt(duration));
@@ -411,12 +416,15 @@ public class MusicInfoLoadUtil {
         byte[] albumArt = retriever.getEmbeddedPicture();
 
         // Bitmap 샘플링
-        BitmapFactory.Options options = new BitmapFactory.Options();
-        options.inSampleSize = quality; // 2의 배수
+        BitmapFactory.Options bmOptions = new BitmapFactory.Options();
+       // bmOptions.inJustDecodeBounds =true;
+        bmOptions.inSampleSize = quality; // 2의 배수
+
 
         Bitmap bitmap;
         if (null != albumArt) {
-            bitmap = BitmapFactory.decodeByteArray(albumArt, 0, albumArt.length, options);
+
+            bitmap = BitmapFactory.decodeByteArray(albumArt, 0, albumArt.length, bmOptions);
         } else {
             bitmap = BitmapFactory.decodeResource(context.getResources(), R.mipmap.ic_no_image);
         }

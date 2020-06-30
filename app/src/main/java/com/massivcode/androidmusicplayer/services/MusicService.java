@@ -267,9 +267,11 @@ public class MusicService extends Service implements MediaPlayer.OnCompletionLis
                 mCurrentMusicInfo = MusicInfoLoadUtil.getSelectedMusicInfo(getApplicationContext(), mCurrentPlaylist.get(mCurrentPosition));
                 break;
             case ACTION_PLAY:
-                if(mCurrentPlaylist != null) {   //재생할 음악이 있으면 재생.
+
                     mCurrentPlaylist = (ArrayList<Long>) (intent != null ? intent.getSerializableExtra("list") : null);
+
                     mCurrentPosition = intent.getIntExtra("position", 0);
+                if(mCurrentPlaylist != null) {   //재생할 음악이 있으면 재생.
                     mCurrentMusicInfo = MusicInfoLoadUtil.getSelectedMusicInfo(getApplicationContext(), mCurrentPlaylist.get(mCurrentPosition));
                 }
                 break;
@@ -387,6 +389,7 @@ public class MusicService extends Service implements MediaPlayer.OnCompletionLis
                     } catch (IOException e) {
                         e.printStackTrace();
                     } finally {
+
                         showNotification();
                     }
                 }
@@ -479,6 +482,7 @@ public class MusicService extends Service implements MediaPlayer.OnCompletionLis
         return START_STICKY;
     }
 
+    //TODO ff
     private void setMetaData() {
         if (mCurrentMusicInfo != null) {
             Bitmap bitmap = MusicInfoLoadUtil.getBitmap(getApplicationContext(), mCurrentMusicInfo.getUri(), 4);
@@ -673,9 +677,11 @@ public class MusicService extends Service implements MediaPlayer.OnCompletionLis
         if (bitmap == null) {
             bitmap = BitmapFactory.decodeResource(getResources(), R.mipmap.ic_no_image);
         }
+
         builder.setSmallIcon(R.mipmap.ic_no_image);
         builder.setContentTitle(mCurrentMusicInfo.getTitle());
         builder.setContentText(mCurrentMusicInfo.getArtist());
+
 
 
         int icon;
