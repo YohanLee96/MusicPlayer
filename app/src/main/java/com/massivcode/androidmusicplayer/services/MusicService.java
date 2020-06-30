@@ -267,9 +267,11 @@ public class MusicService extends Service implements MediaPlayer.OnCompletionLis
                 mCurrentMusicInfo = MusicInfoLoadUtil.getSelectedMusicInfo(getApplicationContext(), mCurrentPlaylist.get(mCurrentPosition));
                 break;
             case ACTION_PLAY:
-                mCurrentPlaylist = (ArrayList<Long>) (intent != null ? intent.getSerializableExtra("list") : null);
-                mCurrentPosition = intent.getIntExtra("position", 0);
-                mCurrentMusicInfo = MusicInfoLoadUtil.getSelectedMusicInfo(getApplicationContext(), mCurrentPlaylist.get(mCurrentPosition));
+                if(mCurrentPlaylist != null) {   //재생할 음악이 있으면 재생.
+                    mCurrentPlaylist = (ArrayList<Long>) (intent != null ? intent.getSerializableExtra("list") : null);
+                    mCurrentPosition = intent.getIntExtra("position", 0);
+                    mCurrentMusicInfo = MusicInfoLoadUtil.getSelectedMusicInfo(getApplicationContext(), mCurrentPlaylist.get(mCurrentPosition));
+                }
                 break;
             case ACTION_PLAY_NEXT:
             case ACTION_PLAY_PREVIOUS:
@@ -352,7 +354,9 @@ public class MusicService extends Service implements MediaPlayer.OnCompletionLis
                 }
                 break;
             case ACTION_PLAY:
-
+                if(mCurrentPlaylist ==null) {
+                    break;
+                }
                 if (mMediaPlayer.isPlaying()) {
                     mMediaPlayer.pause();
                     mMediaPlayer.reset();
