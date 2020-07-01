@@ -157,8 +157,12 @@ public class PlaylistFragment extends Fragment implements AdapterView.OnItemLong
             String name = cursor.getString(cursor.getColumnIndexOrThrow(MyPlaylistContract.MyPlaylistEntry.COLUMN_NAME_PLAYLIST));
             showConfirmDialog(name);
             Log.d(TAG, "이름 : " + name);
-        } else {
-            Log.d(TAG, "자식뷰가 롱클릭되었습니다.");
+        } else if(itemType ==1){
+            // ItemType ==1 -> 자식뷰 롱클릭.
+            //TODO 재생목록 단일Mp3파일 삭제 로직 추가
+        }else {
+
+            Log.d(TAG, " 롱클릭되었습니다.");
             Log.d(TAG, "포지션 : " + position);
         }
         return true;

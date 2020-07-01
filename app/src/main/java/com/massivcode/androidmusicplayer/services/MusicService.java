@@ -239,7 +239,6 @@ public class MusicService extends Service implements MediaPlayer.OnCompletionLis
                 e.printStackTrace();
             }
             isReady = true;
-            // TODO 프래그먼트들에 메세지 보내기
             sendAllEvent();
             EventBus.getDefault().post(new RequestEvent());
         }
@@ -327,8 +326,6 @@ public class MusicService extends Service implements MediaPlayer.OnCompletionLis
                         mMediaPlayer.prepare();
                         isReady = true;
 
-
-                        // TODO 프래그먼트들에 메세지 보내기
                         sendAllEvent();
 
                         mMediaPlayer.start();
@@ -344,7 +341,6 @@ public class MusicService extends Service implements MediaPlayer.OnCompletionLis
                         mMediaPlayer.setDataSource(getApplicationContext(), switchIdToUri(mCurrentPlaylist.get(mCurrentPosition)));
                         mMediaPlayer.prepare();
                         isReady = true;
-                        // TODO 프래그먼트들에 메세지 보내기
                         sendAllEvent();
 
                         mMediaPlayer.start();
@@ -367,7 +363,6 @@ public class MusicService extends Service implements MediaPlayer.OnCompletionLis
                         mMediaPlayer.prepare();
                         isReady = true;
 
-                        // TODO 프래그먼트들에 메세지 보내기
                         sendAllEvent();
 
                         mMediaPlayer.start();
@@ -382,7 +377,7 @@ public class MusicService extends Service implements MediaPlayer.OnCompletionLis
                         mMediaPlayer.setDataSource(getApplicationContext(), switchIdToUri(mCurrentPlaylist.get(mCurrentPosition)));
                         mMediaPlayer.prepare();
                         isReady = true;
-                        // TODO 프래그먼트들에 메세지 보내기
+
                         sendAllEvent();
 
                         mMediaPlayer.start();
@@ -414,7 +409,7 @@ public class MusicService extends Service implements MediaPlayer.OnCompletionLis
                         mMediaPlayer.setDataSource(getApplicationContext(), switchIdToUri(mCurrentPlaylist.get(mCurrentPosition)));
                         mMediaPlayer.prepare();
                         isReady = true;
-                        // TODO 프래그먼트들에 메세지 보내기
+
                         sendAllEvent();
 
                         mMediaPlayer.start();
@@ -430,7 +425,7 @@ public class MusicService extends Service implements MediaPlayer.OnCompletionLis
                         mMediaPlayer.setDataSource(getApplicationContext(), switchIdToUri(mCurrentPlaylist.get(mCurrentPosition)));
                         mMediaPlayer.prepare();
                         isReady = true;
-                        // TODO 프래그먼트들에 메세지 보내기
+
                         sendAllEvent();
 
                         mMediaPlayer.start();
@@ -451,7 +446,7 @@ public class MusicService extends Service implements MediaPlayer.OnCompletionLis
                         mMediaPlayer.setDataSource(getApplicationContext(), switchIdToUri(mCurrentPlaylist.get(mCurrentPosition)));
                         mMediaPlayer.prepare();
                         isReady = true;
-                        // TODO 프래그먼트들에 메세지 보내기
+
                         sendAllEvent();
                         mMediaPlayer.start();
                     } catch (IOException e) {
@@ -466,7 +461,7 @@ public class MusicService extends Service implements MediaPlayer.OnCompletionLis
                         mMediaPlayer.setDataSource(getApplicationContext(), switchIdToUri(mCurrentPlaylist.get(mCurrentPosition)));
                         mMediaPlayer.prepare();
                         isReady = true;
-                        // TODO 프래그먼트들에 메세지 보내기
+
                         sendAllEvent();
                         mMediaPlayer.start();
                     } catch (IOException e) {
@@ -482,7 +477,7 @@ public class MusicService extends Service implements MediaPlayer.OnCompletionLis
         return START_STICKY;
     }
 
-    //TODO ff
+
     private void setMetaData() {
         if (mCurrentMusicInfo != null) {
             Bitmap bitmap = MusicInfoLoadUtil.getBitmap(getApplicationContext(), mCurrentMusicInfo.getUri(), 4);
