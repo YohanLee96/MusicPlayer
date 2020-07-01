@@ -80,7 +80,7 @@ public class PlaylistAdapter extends CursorTreeAdapter implements AsyncBitmapLoa
 //    }
 
     @Override
-    protected Cursor getChildrenCursor(Cursor groupCursor) {
+    public Cursor getChildrenCursor(Cursor groupCursor) {
         return mFacade.getChildrenCursor(groupCursor.getString(groupCursor.getColumnIndexOrThrow(MyPlaylistContract.MyPlaylistEntry.COLUMN_NAME_PLAYLIST)));
     }
 

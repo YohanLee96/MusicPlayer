@@ -49,7 +49,7 @@ public class MyPlaylistFacade {
     public static String selection_toggle_favorite = MyPlaylistContract.MyPlaylistEntry.COLUMN_NAME_PLAYLIST_TYPE + " = ? and " +
             MyPlaylistContract.MyPlaylistEntry.COLUMN_NAME_MUSIC_ID + " = ? ";
 
-    private static String getAllUserPlaylist_SQL = "select _id, playlist_name, _id, (select count(music_id) from MyPlaylist as b where b.playlist_name = MyPlaylist.playlist_name) as music_count from MyPlaylist group by playlist_name order by _id asc";
+    private static String getAllUserPlaylist_SQL = "select _id, playlist_name, (select count(music_id) from MyPlaylist as b where b.playlist_name = MyPlaylist.playlist_name) as music_count from MyPlaylist group by playlist_name order by _id asc";
     private static String getChildrenPlaylist_SQL = "select _id, music_id from MyPlaylist where playlist_name = '";
     private static String getMusicIdsFromSelectedPlaylist_SQL = "select music_id from MyPlaylist where playlist_name = '";
 

@@ -22,6 +22,7 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -37,6 +38,7 @@ import android.widget.TextView;
 
 import com.massivcode.androidmusicplayer.R;
 import com.massivcode.androidmusicplayer.adapters.PlaylistAdapter;
+import com.massivcode.androidmusicplayer.database.DbHelper;
 import com.massivcode.androidmusicplayer.database.MyPlaylistContract;
 import com.massivcode.androidmusicplayer.database.MyPlaylistFacade;
 import com.massivcode.androidmusicplayer.events.Event;
@@ -75,7 +77,6 @@ public class PlaylistFragment extends Fragment implements AdapterView.OnItemLong
 
         mNotifyNoDataTextView = (TextView) view.findViewById(R.id.notify_noData_tv);
         mListView = (ExpandableListView) view.findViewById(R.id.playlist_listView);
-
         return view;
     }
 
@@ -87,6 +88,7 @@ public class PlaylistFragment extends Fragment implements AdapterView.OnItemLong
         if (Build.VERSION.SDK_INT < 23) {
             mAdapter = new PlaylistAdapter(mFacade.getAllUserPlaylist(), getActivity(), true);
             mListView.setAdapter(mAdapter);
+
         } else {
             if (getActivity().checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
                 if (mAdapter == null) {
@@ -99,8 +101,13 @@ public class PlaylistFragment extends Fragment implements AdapterView.OnItemLong
                 }
             }
         }
+//        for(int i=0; i<mAdapter.getGroupCount(); i++) {
+//            mListView.expandGroup(i);
+//        }
 
+        //플레이리스트 하위 음악데이터 이벤트리스너
         mListView.setOnChildClickListener((ExpandableListView.OnChildClickListener) getActivity());
+        //플레이리스트 이벤트리스너
         mListView.setOnItemLongClickListener(this);
     }
 
@@ -150,16 +157,23 @@ public class PlaylistFragment extends Fragment implements AdapterView.OnItemLong
 
     @Override
     public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-        int itemType = mListView.getPackedPositionType(id);
+        int itemType = mListView.getPackedPositionType(id);    //클릭한 요소 Type(ex. 그룹뷰, 자식뷰)
+        int getPackedPositionGroup = mListView.getPackedPositionGroup(id);
+        int getPackedPositionChild= mListView.getPackedPositionChild(id);
+
         if (itemType == 0) {
             Log.d(TAG, "그룹뷰가 롱클릭되었습니다.");
-            Cursor cursor = mAdapter.getGroup(position);
-            String name = cursor.getString(cursor.getColumnIndexOrThrow(MyPlaylistContract.MyPlaylistEntry.COLUMN_NAME_PLAYLIST));
+            Cursor parentData = (Cursor) mListView.getExpandableListAdapter().getGroup(position);
+            parentData.moveToPosition(position);
+            String name = parentData.getString(parentData.getColumnIndexOrThrow(MyPlaylistContract.MyPlaylistEntry.COLUMN_NAME_PLAYLIST));
             showConfirmDialog(name);
-            Log.d(TAG, "이름 : " + name);
+//            Cursor cursor = mAdapter.getGroup(position);
+//            String name = cursor.getString(cursor.getColumnIndexOrThrow(MyPlaylistContract.MyPlaylistEntry.COLUMN_NAME_PLAYLIST));
+//            showConfirmDialog(name);
+            //Log.d(TAG, "이름 : " + name);
         } else if(itemType ==1){
-            // ItemType ==1 -> 자식뷰 롱클릭.
             //TODO 재생목록 단일Mp3파일 삭제 로직 추가
+            Log.d(TAG, "자식뷰가 롱클릭 되었습니다.");
         }else {
 
             Log.d(TAG, " 롱클릭되었습니다.");
