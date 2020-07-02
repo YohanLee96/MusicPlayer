@@ -124,6 +124,7 @@ public class PlaylistFragment extends Fragment implements AdapterView.OnItemLong
     }
 
     // EventBus 용 이벤트 수신
+    @SuppressWarnings("unused")
     public void onEvent(Event event) {
 
         if (event instanceof MusicEvent) {

@@ -34,6 +34,7 @@ import android.widget.ListView;
 
 import com.massivcode.androidmusicplayer.R;
 import com.massivcode.androidmusicplayer.adapters.SongAdapter;
+import com.massivcode.androidmusicplayer.database.MyMusicFacade;
 import com.massivcode.androidmusicplayer.events.Event;
 import com.massivcode.androidmusicplayer.events.InitEvent;
 import com.massivcode.androidmusicplayer.events.MusicEvent;
@@ -50,6 +51,8 @@ public class SongsFragment extends Fragment {
 
     private static final String TAG = SongsFragment.class.getSimpleName();
     private ListView mListView;
+
+    private MyMusicFacade myMusicFacade;
     private SongAdapter mAdapter;
 
     private SaveState mSaveState;
@@ -61,6 +64,7 @@ public class SongsFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        myMusicFacade = new MyMusicFacade(getActivity());
         View view = inflater.inflate(R.layout.fragment_songs, container, false);
         mListView = (ListView) view.findViewById(R.id.songs_listView);
         return view;
@@ -76,7 +80,8 @@ public class SongsFragment extends Fragment {
 
         if(Build.VERSION.SDK_INT < 23) {
             Cursor cursor = getActivity().getContentResolver().query(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, MusicInfoLoadUtil.projection, MediaStore.Audio.Media.ARTIST + " != ? AND " + MediaStore.Audio.Media.TITLE + " NOT LIKE '%" + "hangout" + "%'" , new String[]{MediaStore.UNKNOWN_STRING}, null);
-            mAdapter = new SongAdapter(getActivity().getApplicationContext(), cursor, true);
+            //mAdapter = new SongAdapter(getActivity().getApplicationContext(), cursor, true);
+            mAdapter = this.initSongAdapter();
             mListView.setAdapter(mAdapter);
         } else {
             if(getActivity().checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
@@ -116,14 +121,15 @@ public class SongsFragment extends Fragment {
     }
 
     // EventBus 용 이벤트 수신
+    @SuppressWarnings("unused")
     public void onEvent(Event event) {
 
         if (event instanceof MusicEvent) {
-//            Log.d(TAG, "노래에서 뮤직이벤트를 받았습니다.");
+            Log.d(TAG, "노래에서 뮤직이벤트를 받았습니다.");
             mAdapter.swapMusicEvent((MusicEvent) event);
             mAdapter.notifyDataSetChanged();
         } else if(event instanceof PlayBack) {
-//            Log.d(TAG, "노래에서 플레이백이벤트를 받았습니다.");
+            Log.d(TAG, "노래에서 플레이백이벤트를 받았습니다.");
 
             final PlayBack playback = (PlayBack) event;
 
@@ -138,15 +144,29 @@ public class SongsFragment extends Fragment {
                 mSaveState = (SaveState) event;
             }
         } else if(event instanceof InitEvent) {
-            Log.d(TAG, "initEvent : SongsFragment");
-            Cursor cursor = getActivity().getContentResolver().query(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, MusicInfoLoadUtil.projection, MediaStore.Audio.Media.ARTIST + " != ? ", new String[]{MediaStore.UNKNOWN_STRING}, null);
-            mAdapter = new SongAdapter(getActivity().getApplicationContext(), cursor, true);
-            mListView.setAdapter(mAdapter);
-            mAdapter.notifyDataSetChanged();
+//            Log.d(TAG, "initEvent : SongsFragment");
+//            Cursor cursor = getActivity().getContentResolver().query(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, MusicInfoLoadUtil.projection, MediaStore.Audio.Media.ARTIST + " != ? ", new String[]{MediaStore.UNKNOWN_STRING}, null);
+//            //mAdapter = new SongAdapter(getActivity().getApplicationContext(), cursor, true);
+//            mAdapter = this.initSongAdapter();
+//            mListView.setAdapter(mAdapter);
+//            mAdapter.notifyDataSetChanged();
+            if(mAdapter == null) {
+                Log.d(TAG, "mAdapter 널값");
+                mAdapter = initSongAdapter();
+                mListView.setAdapter(mAdapter);
+            }else {
+                Log.d(TAG, "mAdapter 널값이 아님");
+                mAdapter.changeCursor(myMusicFacade.getAllMusicList());
+            }
+
         }
 
-
     }
+
+    private SongAdapter initSongAdapter() {
+        return new SongAdapter(getActivity().getApplicationContext(), myMusicFacade.getAllMusicList(), true);
+    }
+
 
 
 }

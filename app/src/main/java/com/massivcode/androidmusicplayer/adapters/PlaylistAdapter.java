@@ -51,10 +51,12 @@ public class PlaylistAdapter extends CursorTreeAdapter implements AsyncBitmapLoa
 
     public PlaylistAdapter(Cursor cursor, Context context, boolean autoRequery) {
         super(cursor, context, autoRequery);
+
         mInflater = LayoutInflater.from(context);
         mContext = context;
         mAsyncBitmapLoader = new AsyncBitmapLoader(context);
         mAsyncBitmapLoader.setBitmapLoadListener(this);
+        //DB 핸들링 모듈
         mFacade = new MyPlaylistFacade(context);
     }
 
@@ -96,30 +98,16 @@ public class PlaylistAdapter extends CursorTreeAdapter implements AsyncBitmapLoa
         return view;
     }
 
+    //TODO 뷰 바인딩
     @Override
     protected void bindGroupView(View view, Context context, Cursor cursor, boolean isExpanded) {
+
         ViewHolder viewHolder = (ViewHolder) view.getTag();
         String name = cursor.getString(cursor.getColumnIndexOrThrow(MyPlaylistContract.MyPlaylistEntry.COLUMN_NAME_PLAYLIST));
         int total = cursor.getInt(cursor.getColumnIndexOrThrow("music_count"));
         viewHolder.mGroupPlaylistNameTextView.setText(name);
         viewHolder.mGroupSongsNumberTextView.setText(total + mContext.getString(R.string.adapter_songs));
     }
-
-    @Override
-    protected View newChildView(Context context, Cursor cursor, boolean isLastChild, ViewGroup parent) {
-        ViewHolder viewHolder = new ViewHolder();
-
-        View view = mInflater.inflate(R.layout.item_playlist_child, parent, false);
-
-        viewHolder.mChildAlbumArtImageView = (ImageView) view.findViewById(R.id.item_artist_child_album_iv);
-        viewHolder.mChildIsPlayingImageView = (ImageView) view.findViewById(R.id.item_songs_isPlay_iv);
-        viewHolder.mChildArtistTextView = (TextView) view.findViewById(R.id.item_artist_child_artist_tv);
-        viewHolder.mChildTitleTextView = (TextView) view.findViewById(R.id.item_artist_child_title_tv);
-
-        view.setTag(viewHolder);
-        return view;
-    }
-
 
     @Override
     protected void bindChildView(View view, Context context, Cursor cursor, boolean isLastChild) {
@@ -152,6 +140,21 @@ public class PlaylistAdapter extends CursorTreeAdapter implements AsyncBitmapLoa
             }
 
         }
+    }
+
+    @Override
+    protected View newChildView(Context context, Cursor cursor, boolean isLastChild, ViewGroup parent) {
+        ViewHolder viewHolder = new ViewHolder();
+
+        View view = mInflater.inflate(R.layout.item_playlist_child, parent, false);
+
+        viewHolder.mChildAlbumArtImageView = (ImageView) view.findViewById(R.id.item_artist_child_album_iv);
+        viewHolder.mChildIsPlayingImageView = (ImageView) view.findViewById(R.id.item_songs_isPlay_iv);
+        viewHolder.mChildArtistTextView = (TextView) view.findViewById(R.id.item_artist_child_artist_tv);
+        viewHolder.mChildTitleTextView = (TextView) view.findViewById(R.id.item_artist_child_title_tv);
+
+        view.setTag(viewHolder);
+        return view;
     }
 
     @Override

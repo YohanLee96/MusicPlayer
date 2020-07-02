@@ -31,31 +31,43 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.massivcode.androidmusicplayer.R;
+import com.massivcode.androidmusicplayer.database.MyMusicContract;
+import com.massivcode.androidmusicplayer.database.MyMusicFacade;
 import com.massivcode.androidmusicplayer.events.MusicEvent;
 import com.massivcode.androidmusicplayer.events.PlayBack;
 import com.suwonsmartapp.abl.AsyncBitmapLoader;
 
 
 public class SongAdapter extends CursorAdapter implements AsyncBitmapLoader.BitmapLoadListener {
-
+    //로깅에 이용
     private static final String TAG = SongAdapter.class.getSimpleName();
     private LayoutInflater mInflater;
-    private AsyncBitmapLoader mAsyncBitmapLoader;
     private Context mContext;
-
-    private int mCurrentPlayingPosition;
+    private AsyncBitmapLoader mAsyncBitmapLoader;
+    private MyMusicFacade myMusicFacade;
 
     private MusicEvent mMusicEvent;
     private PlayBack mPlayback;
 
-    public SongAdapter(Context context, Cursor c, boolean autoRequery) {
-        super(context, c, autoRequery);
+    private int mCurrentPlayingPosition;
+
+    public SongAdapter(Context context, Cursor cursor, boolean autoRequery) {
+        super(context, cursor, autoRequery);
 
         mInflater = LayoutInflater.from(context);
         mContext = context;
         mAsyncBitmapLoader = new AsyncBitmapLoader(context);
         mAsyncBitmapLoader.setBitmapLoadListener(this);
+        //DB 핸들링 모듈
+        myMusicFacade = new MyMusicFacade(context);
+    }
 
+    public void swapMusicEvent(MusicEvent musicEvent) {
+        mMusicEvent = musicEvent;
+    }
+
+    public void swapPlayback(PlayBack playback) {
+        mPlayback = playback;
     }
 
     @Override
@@ -72,24 +84,28 @@ public class SongAdapter extends CursorAdapter implements AsyncBitmapLoader.Bitm
         return view;
     }
 
+    //TODO 뷰 바인딩
     @Override
     public void bindView(View view, Context context, Cursor cursor) {
 
         ViewHolder holder = (ViewHolder)view.getTag();
-        int id = (int) cursor.getLong(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media._ID));
-        holder.TitleTextView.setText(cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.TITLE)));
-        holder.ArtistTextView.setText(cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.ARTIST)));
+//        int id = (int) cursor.getLong(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media._ID));
+//        holder.TitleTextView.setText(cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.TITLE)));
+//        holder.ArtistTextView.setText(cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.ARTIST)));
+        int id = (int) cursor.getLong(cursor.getColumnIndexOrThrow(MyMusicContract.COLUMN_NAME_MUSIC_ID));
+        holder.TitleTextView.setText(cursor.getString(cursor.getColumnIndexOrThrow(MyMusicContract.COLUMN_NAME_MUSIC_NAME)));
+        holder.TitleTextView.setText(cursor.getString(cursor.getColumnIndexOrThrow(MyMusicContract.COLUMN_NAME_ARTIST_NAME)));
 
         // 이미지 셋팅
-        mAsyncBitmapLoader.loadBitmap(cursor.getPosition(), holder.AlbumArtImageView);
-
+        //mAsyncBitmapLoader.loadBitmap(cursor.getPosition(), holder.AlbumArtImageView);
+        mAsyncBitmapLoader.loadBitmap(id, holder.AlbumArtImageView);
 
         if (mMusicEvent != null && mPlayback != null) {
 
             if(mMusicEvent.getMusicInfo() != null) {
                 if (id == mMusicEvent.getMusicInfo().get_id()) {
                     holder.IsPlayImageView.setVisibility(View.VISIBLE);
-                    mCurrentPlayingPosition = cursor.getPosition();
+                  //  mCurrentPlayingPosition = cursor.getPosition();
                     if (mPlayback.isPlaying()) {
                         holder.IsPlayImageView.setSelected(true);
                     } else {
@@ -110,19 +126,12 @@ public class SongAdapter extends CursorAdapter implements AsyncBitmapLoader.Bitm
         return mCurrentPlayingPosition;
     }
 
-    public void swapMusicEvent(MusicEvent musicEvent) {
-        mMusicEvent = musicEvent;
-    }
-
-    public void swapPlayback(PlayBack playback) {
-        mPlayback = playback;
-    }
 
     @Override
-    public Bitmap getBitmap(int position) {
+    public Bitmap getBitmap(int id) {
         // id 가져오기
         // DB의 _id == id
-        long id = getItemId(position);
+        //long id = getItemId(position);
 
         MediaMetadataRetriever retriever = new MediaMetadataRetriever();
         retriever.setDataSource(mContext, Uri.parse("content://media/external/audio/media/" + id));

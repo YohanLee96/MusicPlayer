@@ -59,15 +59,23 @@ public class MyPlaylistFacade {
         mContext = context;
     }
 
+    //DB 생성. 한번만 처리.
     public void createDb() {
         SQLiteDatabase db = mHelper.getWritableDatabase();
         mHelper.onCreate(db);
     }
 
 
+    //플레이리스트 전체 삭제
     public void deleteUserPlaylist(String name) {
         SQLiteDatabase db = mHelper.getWritableDatabase();
         db.delete(MyPlaylistContract.MyPlaylistEntry.TABLE_NAME, MyPlaylistContract.MyPlaylistEntry.COLUMN_NAME_PLAYLIST + "=?", new String[]{name});
+    }
+
+    //플레이리스트에 있는 음악 삭제
+    public void deletePlayListMusic(String musicId) {
+        SQLiteDatabase db = mHelper.getWritableDatabase();
+        db.delete(MyPlaylistContract.MyPlaylistEntry.TABLE_NAME, MyPlaylistContract.MyPlaylistEntry.COLUMN_NAME_MUSIC_ID + "=?", new String[]{musicId});
     }
 
     /**
@@ -185,61 +193,61 @@ public class MyPlaylistFacade {
     }
 
     /**
-     * 사용자 정의 플레이 리스트 추가
-     * @param userPlaylistName
-     * @param userPlayList
-     */
-    public void addUserPlaylist(String userPlaylistName, ArrayList<Long> userPlayList) {
-        SQLiteDatabase db;
-        SQLiteStatement statement;
+         * 사용자 정의 플레이 리스트 추가
+         * @param userPlaylistName
+         * @param userPlayList
+         */
+        public void addUserPlaylist(String userPlaylistName, ArrayList<Long> userPlayList) {
+            SQLiteDatabase db;
+            SQLiteStatement statement;
 
-        if (userPlayList != null && userPlayList.size() != 0) {
+            if (userPlayList != null && userPlayList.size() != 0) {
 
-            // 사용자가 추가하고자 하는 플레이리스트가 1곡일 때
-            if (userPlayList.size() == 1) {
-                Log.d(TAG, "case1");
-                db = mHelper.getWritableDatabase();
-                ContentValues values = new ContentValues();
-                values.put(MyPlaylistContract.MyPlaylistEntry.COLUMN_NAME_PLAYLIST, userPlaylistName);
-                values.put(MyPlaylistContract.MyPlaylistEntry.COLUMN_NAME_MUSIC_ID, userPlayList.get(0));
-                values.put(MyPlaylistContract.MyPlaylistEntry.COLUMN_NAME_PLAYLIST_TYPE, MyPlaylistContract.PlaylistNameEntry.PLAYLIST_NAME_USER_DEFINITION);
-                db.insert(MyPlaylistContract.MyPlaylistEntry.TABLE_NAME, null, values);
-                Log.d(TAG, "사용자 정의 플레이리스트 " + userPlaylistName + "에 1곡이 추가되었습니다.");
-            }
-
-            // 사용자가 추가하고자 하는 플레이리스트가 1곡 이상일 때
-            else {
-                Log.d(TAG, "case2 : " + userPlaylistName);
-                db = mHelper.getWritableDatabase();
-                db.beginTransaction();
-
-                statement = db.compileStatement(
-                        "INSERT INTO " + MyPlaylistContract.MyPlaylistEntry.TABLE_NAME + " ( " +
-                                MyPlaylistContract.MyPlaylistEntry.COLUMN_NAME_PLAYLIST + " , " +
-                                MyPlaylistContract.MyPlaylistEntry.COLUMN_NAME_MUSIC_ID + " , " +
-                                MyPlaylistContract.MyPlaylistEntry.COLUMN_NAME_PLAYLIST_TYPE + " ) " +
-                                "values(?, ?, ?)"
-
-                );
-
-                for (long id : userPlayList) {
-                    int column = 1;
-                    statement.bindString(column++, userPlaylistName);
-                    statement.bindLong(column++, id);
-                    statement.bindString(column++, MyPlaylistContract.PlaylistNameEntry.PLAYLIST_NAME_USER_DEFINITION);
-
-                    statement.execute();
+                // 사용자가 추가하고자 하는 플레이리스트가 1곡일 때
+                if (userPlayList.size() == 1) {
+                    Log.d(TAG, "case1");
+                    db = mHelper.getWritableDatabase();
+                    ContentValues values = new ContentValues();
+                    values.put(MyPlaylistContract.MyPlaylistEntry.COLUMN_NAME_PLAYLIST, userPlaylistName);
+                    values.put(MyPlaylistContract.MyPlaylistEntry.COLUMN_NAME_MUSIC_ID, userPlayList.get(0));
+                    values.put(MyPlaylistContract.MyPlaylistEntry.COLUMN_NAME_PLAYLIST_TYPE, MyPlaylistContract.PlaylistNameEntry.PLAYLIST_NAME_USER_DEFINITION);
+                    db.insert(MyPlaylistContract.MyPlaylistEntry.TABLE_NAME, null, values);
+                    Log.d(TAG, "사용자 정의 플레이리스트 " + userPlaylistName + "에 1곡이 추가되었습니다.");
                 }
 
-                statement.close();
-                db.setTransactionSuccessful();
-                db.endTransaction();
-                Log.d(TAG, "사용자 정의 플레이리스트 " + userPlaylistName + "에 " + userPlayList.size() + " 곡이 추가되었습니다.");
+                // 사용자가 추가하고자 하는 플레이리스트가 1곡 이상일 때
+                else {
+                    Log.d(TAG, "case2 : " + userPlaylistName);
+                    db = mHelper.getWritableDatabase();
+                    db.beginTransaction();
+
+                    statement = db.compileStatement(
+                            "INSERT INTO " + MyPlaylistContract.MyPlaylistEntry.TABLE_NAME + " ( " +
+                                    MyPlaylistContract.MyPlaylistEntry.COLUMN_NAME_PLAYLIST + " , " +
+                                    MyPlaylistContract.MyPlaylistEntry.COLUMN_NAME_MUSIC_ID + " , " +
+                                    MyPlaylistContract.MyPlaylistEntry.COLUMN_NAME_PLAYLIST_TYPE + " ) " +
+                                    "values(?, ?, ?)"
+
+                    );
+
+                    for (long id : userPlayList) {
+                        int column = 1;
+                        statement.bindString(column++, userPlaylistName);
+                        statement.bindLong(column++, id);
+                        statement.bindString(column++, MyPlaylistContract.PlaylistNameEntry.PLAYLIST_NAME_USER_DEFINITION);
+
+                        statement.execute();
+                    }
+
+                    statement.close();
+                    db.setTransactionSuccessful();
+                    db.endTransaction();
+                    Log.d(TAG, "사용자 정의 플레이리스트 " + userPlaylistName + "에 " + userPlayList.size() + " 곡이 추가되었습니다.");
+
+                }
+
 
             }
-
-
-        }
     }
 
 }

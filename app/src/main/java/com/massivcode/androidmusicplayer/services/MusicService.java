@@ -41,6 +41,7 @@ import android.widget.Toast;
 
 import com.massivcode.androidmusicplayer.R;
 import com.massivcode.androidmusicplayer.activities.MainActivity;
+import com.massivcode.androidmusicplayer.database.MyMusicFacade;
 import com.massivcode.androidmusicplayer.events.Event;
 import com.massivcode.androidmusicplayer.events.FinishActivity;
 import com.massivcode.androidmusicplayer.events.InitEvent;
@@ -188,6 +189,7 @@ public class MusicService extends Service implements MediaPlayer.OnCompletionLis
     private int mCurrentPosition = -1;
     private MusicInfo mCurrentMusicInfo;
     private UnPlugReceiver mUnPlugReceiver;
+    private MyMusicFacade myMusicFacade;
 
     private HashMap<Long, MusicInfo> mAllMusicData = null;
 
@@ -217,6 +219,7 @@ public class MusicService extends Service implements MediaPlayer.OnCompletionLis
                     public void run() {
                         Log.d(TAG, "InitEvent @ service");
                         mAllMusicData = MusicInfoLoadUtil.getAllMusicInfo(getApplicationContext());
+                        new MyMusicFacade(getApplicationContext()).addMusicList(mAllMusicData);
                     }
                 }).start();
             }
@@ -549,6 +552,7 @@ public class MusicService extends Service implements MediaPlayer.OnCompletionLis
                     public void run() {
                         Log.d(TAG, "InitEvent @ service");
                         mAllMusicData = MusicInfoLoadUtil.getAllMusicInfo(getApplicationContext());
+                        new MyMusicFacade(getApplicationContext()).addMusicList(mAllMusicData);
                     }
                 }).start();
             }

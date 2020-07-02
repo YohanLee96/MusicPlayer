@@ -16,15 +16,14 @@
 
 package com.massivcode.androidmusicplayer.database;
 
+
 import android.provider.BaseColumns;
 
-public abstract class MyMusicContract implements BaseColumns {
-   public static final String TABLE_NAME = "MyMusic";
-   public static final String COLUMN_NAME_MUSIC_ID = "music_id";
-   public static final String COLUMN_NAME_ARTIST_NAME = "artist_name";
-   public static final String COLUMN_NAME_MUSIC_NAME = "music_name";
-   public static final String COLUMN_NAME_ALBUM = "album";
-   public static final String COLUMN_NAME_DURATION = "duration";
-
+public class MemberContract implements BaseColumns {
+    public static final String TABLE_NAME = "Member";
+    public static final String COLUMN_NAME_NAME = "name"; //이름
+    public static final String COLUMN_NAME_PASSWORD = "password"; //비밀번호
+    public static final String COLUMN_NAME_DEPARTMENT = "department"; //학과
+    public static final String COLUMN_NAME_DEPARTMENT_NO = "department_no"; //학번
 
 }
