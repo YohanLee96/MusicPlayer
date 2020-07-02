@@ -469,6 +469,7 @@ public class MainActivity extends AppCompatActivity
                 break;
             }
             case R.id.playlist_listView: {
+                //TODO 플레이리스트 자식뷰 클릭이벤트
                 Cursor parentData = (Cursor) parent.getExpandableListAdapter().getGroup(groupPosition);
                 parentData.moveToPosition(groupPosition);
                 String playlistName = parentData.getString(parentData.getColumnIndexOrThrow(MyPlaylistContract.MyPlaylistEntry.COLUMN_NAME_PLAYLIST));

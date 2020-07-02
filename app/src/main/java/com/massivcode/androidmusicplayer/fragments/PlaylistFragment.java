@@ -159,48 +159,48 @@ public class PlaylistFragment extends Fragment implements AdapterView.OnItemLong
     @Override
     public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
         int itemType = mListView.getPackedPositionType(id);    //클릭한 요소 Type(ex. 그룹뷰, 자식뷰)
-        int getPackedPositionGroup = mListView.getPackedPositionGroup(id);
-        int getPackedPositionChild= mListView.getPackedPositionChild(id);
-
+        Cursor itemData = (Cursor)parent.getAdapter().getItem(position); //클릭한 요소에 대한 데이터 Load.
         if (itemType == 0) {
             Log.d(TAG, "그룹뷰가 롱클릭되었습니다.");
-            Cursor parentData = (Cursor) mListView.getExpandableListAdapter().getGroup(position);
-            parentData.moveToPosition(position);
-            String name = parentData.getString(parentData.getColumnIndexOrThrow(MyPlaylistContract.MyPlaylistEntry.COLUMN_NAME_PLAYLIST));
-            showConfirmDialog(name);
-//            Cursor cursor = mAdapter.getGroup(position);
-//            String name = cursor.getString(cursor.getColumnIndexOrThrow(MyPlaylistContract.MyPlaylistEntry.COLUMN_NAME_PLAYLIST));
-//            showConfirmDialog(name);
-            //Log.d(TAG, "이름 : " + name);
+            String name = itemData.getString(itemData.getColumnIndexOrThrow(MyPlaylistContract.MyPlaylistEntry.COLUMN_NAME_PLAYLIST));
+            showConfirmDialog(name, itemType);
         } else if(itemType ==1){
-            //TODO 재생목록 단일Mp3파일 삭제 로직 추가
             Log.d(TAG, "자식뷰가 롱클릭 되었습니다.");
+            String _id = itemData.getString(itemData.getColumnIndexOrThrow(MyPlaylistContract.MyPlaylistEntry._ID));
+            //TODO 재생목록 단일Mp3파일 삭제 로직 추가
+            showConfirmDialog(_id, itemType);
         }else {
-
-            Log.d(TAG, " 롱클릭되었습니다.");
+            Log.d(TAG, "그냥 이유없이 롱클릭되었습니다. 왜지....");
             Log.d(TAG, "포지션 : " + position);
         }
         return true;
     }
 
-    private void showConfirmDialog(final String name) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        builder.setTitle(R.string.delete_dialog_title).setMessage(name + getActivity().getString(R.string.delete_dialog_message)).setPositiveButton(R.string.delete, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                Log.d(TAG, "삭제 눌림");
-                mFacade.deleteUserPlaylist(name);
-                mAdapter.changeCursor(mFacade.getAllUserPlaylist());
+    private void showConfirmDialog(final String param, final int itemType) {
+        Log.d(TAG, "삭제 눌림");
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity())
+                .setTitle(R.string.delete_dialog_title)
+                .setMessage("삭제하시겠습니까?")
+                .setPositiveButton(R.string.delete,
+                        new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                if(itemType == 0) { //그룹 삭제
+                                    mFacade.deleteUserPlaylist(param);
+                                }else if(itemType ==1) { //단일 삭제
+                                    mFacade.deletePlayListMusic(param);
+                                }
+                                mAdapter.changeCursor(mFacade.getAllUserPlaylist());
 
-                if (mFacade.isAlreadyExist()) {
-                    Log.d(TAG, "데이터가 있습니다.");
-                    mNotifyNoDataTextView.setVisibility(View.GONE);
-                } else {
-                    Log.d(TAG, "데이터가 없습니다.");
-                    mNotifyNoDataTextView.setVisibility(View.VISIBLE);
-                }
-            }
-        });
+                                if (mFacade.isAlreadyExist()) {
+                                    Log.d(TAG, "데이터가 있습니다.");
+                                    mNotifyNoDataTextView.setVisibility(View.GONE);
+                                } else {
+                                    Log.d(TAG, "데이터가 없습니다.");
+                                    mNotifyNoDataTextView.setVisibility(View.VISIBLE);
+                                }
+                            }
+                        });
         builder.setNegativeButton(R.string.cancel, null);
         builder.show();
     }

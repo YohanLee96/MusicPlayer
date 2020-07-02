@@ -73,9 +73,9 @@ public class MyPlaylistFacade {
     }
 
     //플레이리스트에 있는 음악 삭제
-    public void deletePlayListMusic(String musicId) {
+    public void deletePlayListMusic(String id) {
         SQLiteDatabase db = mHelper.getWritableDatabase();
-        db.delete(MyPlaylistContract.MyPlaylistEntry.TABLE_NAME, MyPlaylistContract.MyPlaylistEntry.COLUMN_NAME_MUSIC_ID + "=?", new String[]{musicId});
+        int deleteReslt = db.delete(MyPlaylistContract.MyPlaylistEntry.TABLE_NAME, MyPlaylistContract.MyPlaylistEntry._ID + "=?", new String[]{id});
     }
 
     /**
