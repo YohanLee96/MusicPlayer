@@ -38,8 +38,8 @@ public class DbHelper extends SQLiteOpenHelper {
     //음원목록
     private static final String SQL_CREATE_MY_MUSIC =
             "CREATE TABLE IF NOT EXISTS " + MyMusicContract.TABLE_NAME + " (" +
-                    MyMusicContract._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                    MyMusicContract.COLUMN_NAME_MUSIC_ID + " INTEGER NOT NULL, " +
+                  //  MyMusicContract._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                    MyMusicContract._ID + " INTEGER NOT NULL, " +
                     MyMusicContract.COLUMN_NAME_ARTIST_NAME + " TEXT NOT NULL , " +
                     MyMusicContract.COLUMN_NAME_MUSIC_NAME  + " TEXT NOT NULL , " +
                     MyMusicContract.COLUMN_NAME_ALBUM  + " TEXT NOT NULL , " +

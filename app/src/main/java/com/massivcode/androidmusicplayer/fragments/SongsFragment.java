@@ -31,10 +31,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.massivcode.androidmusicplayer.R;
 import com.massivcode.androidmusicplayer.adapters.SongAdapter;
 import com.massivcode.androidmusicplayer.database.MyMusicFacade;
+import com.massivcode.androidmusicplayer.database.MyPlaylistFacade;
 import com.massivcode.androidmusicplayer.events.Event;
 import com.massivcode.androidmusicplayer.events.InitEvent;
 import com.massivcode.androidmusicplayer.events.MusicEvent;
@@ -50,6 +52,8 @@ import de.greenrobot.event.EventBus;
 public class SongsFragment extends Fragment {
 
     private static final String TAG = SongsFragment.class.getSimpleName();
+
+  //  private TextView mNotifyNoDataTextView;
     private ListView mListView;
 
     private MyMusicFacade myMusicFacade;
@@ -61,11 +65,18 @@ public class SongsFragment extends Fragment {
     public SongsFragment() {
     }
 
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        myMusicFacade = new MyMusicFacade(getActivity());
+    }
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        myMusicFacade = new MyMusicFacade(getActivity());
         View view = inflater.inflate(R.layout.fragment_songs, container, false);
+
+     //   mNotifyNoDataTextView = (TextView) view.findViewById(R.id.notify_noData_tv);
         mListView = (ListView) view.findViewById(R.id.songs_listView);
         return view;
     }
@@ -79,14 +90,21 @@ public class SongsFragment extends Fragment {
         mListView.addHeaderView(header);
 
         if(Build.VERSION.SDK_INT < 23) {
-            Cursor cursor = getActivity().getContentResolver().query(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, MusicInfoLoadUtil.projection, MediaStore.Audio.Media.ARTIST + " != ? AND " + MediaStore.Audio.Media.TITLE + " NOT LIKE '%" + "hangout" + "%'" , new String[]{MediaStore.UNKNOWN_STRING}, null);
+            //Cursor cursor = getActivity().getContentResolver().query(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, MusicInfoLoadUtil.projection, MediaStore.Audio.Media.ARTIST + " != ? AND " + MediaStore.Audio.Media.TITLE + " NOT LIKE '%" + "hangout" + "%'" , new String[]{MediaStore.UNKNOWN_STRING}, null);
             //mAdapter = new SongAdapter(getActivity().getApplicationContext(), cursor, true);
             mAdapter = this.initSongAdapter();
             mListView.setAdapter(mAdapter);
         } else {
             if(getActivity().checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
                 if(mAdapter == null) {
-                    EventBus.getDefault().post(new InitEvent());
+                    if (myMusicFacade.isAlreadyExist()) {
+                       // mNotifyNoDataTextView.setVisibility(View.GONE);
+                        EventBus.getDefault().post(new InitEvent());
+                    } else {
+                        mAdapter = this.initSongAdapter();
+                        mListView.setAdapter(mAdapter);
+                       // mNotifyNoDataTextView.setVisibility(View.VISIBLE);
+                    }
                 }
             }
         }

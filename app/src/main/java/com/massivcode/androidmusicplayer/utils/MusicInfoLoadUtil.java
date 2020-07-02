@@ -26,6 +26,7 @@ import android.provider.MediaStore;
 import android.util.Log;
 
 import com.massivcode.androidmusicplayer.R;
+import com.massivcode.androidmusicplayer.database.MyMusicContract;
 import com.massivcode.androidmusicplayer.database.MyPlaylistContract;
 import com.massivcode.androidmusicplayer.database.MyPlaylistFacade;
 import com.massivcode.androidmusicplayer.models.MusicInfo;
@@ -196,7 +197,8 @@ public class MusicInfoLoadUtil {
 
         for (Long id : ids) {
             MusicInfo musicInfo = new MusicInfo();
-            Cursor cursor = context.getContentResolver().query(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, projection, MediaStore.Audio.Media._ID + " = ?", new String[]{String.valueOf(id)}, null);
+            Cursor cursor = context.getContentResolver().query(
+                    MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, projection, MediaStore.Audio.Media._ID + " = ?", new String[]{String.valueOf(id)}, null);
             if (cursor != null || cursor.getCount() != 0) {
 
                 while (cursor.moveToNext()) {
@@ -257,11 +259,15 @@ public class MusicInfoLoadUtil {
             cursor.moveToFirst();
             long _id = id;
             Uri uri = Uri.parse("content://media/external/audio/media/" + _id);
+
             String artist = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.ARTIST));
             String title = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.TITLE));
             String album = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.ALBUM));
             String duration = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.DURATION));
-
+//            String artist = cursor.getString(cursor.getColumnIndexOrThrow(MyMusicContract.COLUMN_NAME_ARTIST_NAME));
+//            String title = cursor.getString(cursor.getColumnIndexOrThrow(MyMusicContract.COLUMN_NAME_MUSIC_NAME));
+//            String album = cursor.getString(cursor.getColumnIndexOrThrow(MyMusicContract.COLUMN_NAME_ALBUM));
+//            String duration = cursor.getString(cursor.getColumnIndexOrThrow(MyMusicContract.COLUMN_NAME_DURATION));
             MediaMetadataRetriever retriever = new MediaMetadataRetriever();
             retriever.setDataSource(context, uri);
 

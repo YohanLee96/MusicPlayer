@@ -18,7 +18,7 @@ package com.massivcode.androidmusicplayer.database;
 
 import android.provider.BaseColumns;
 
-public abstract class MyMusicContract implements BaseColumns {
+public abstract class MyMusicContract implements BaseColumns  {
    public static final String TABLE_NAME = "MyMusic";
    public static final String COLUMN_NAME_MUSIC_ID = "music_id";
    public static final String COLUMN_NAME_ARTIST_NAME = "artist_name";
