@@ -25,6 +25,4 @@ public abstract class MyMusicContract implements BaseColumns  {
    public static final String COLUMN_NAME_MUSIC_NAME = "music_name";
    public static final String COLUMN_NAME_ALBUM = "album";
    public static final String COLUMN_NAME_DURATION = "duration";
-
-
 }

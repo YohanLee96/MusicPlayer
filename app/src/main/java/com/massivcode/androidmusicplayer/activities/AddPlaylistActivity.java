@@ -42,6 +42,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.massivcode.androidmusicplayer.R;
+import com.massivcode.androidmusicplayer.database.MyMusicContract;
+import com.massivcode.androidmusicplayer.database.MyMusicFacade;
 import com.massivcode.androidmusicplayer.fragments.AddPlaylistFragment;
 import com.massivcode.androidmusicplayer.utils.MusicInfoLoadUtil;
 import com.suwonsmartapp.abl.AsyncBitmapLoader;
@@ -59,6 +61,7 @@ public class AddPlaylistActivity extends AppCompatActivity implements SearchView
     private SearchAdapter mSearchAdapter;
 
     private ArrayList<Long> mUserDefinitionPlaylist;
+    private MyMusicFacade myMusicFacade;
 
 
 
@@ -76,7 +79,7 @@ public class AddPlaylistActivity extends AppCompatActivity implements SearchView
         mNotifyTextView = (TextView) findViewById(R.id.add_playlist_tv);
         mAddPlaylistFab = (FloatingActionButton)findViewById(R.id.add_playlist_fab);
         mAddPlaylistFab.setOnClickListener(this);
-
+        myMusicFacade = new MyMusicFacade(getApplicationContext());
     }
 
     @Override
@@ -100,7 +103,9 @@ public class AddPlaylistActivity extends AppCompatActivity implements SearchView
         switch (id) {
             case R.id.action_songs:
                 Log.d(TAG, "노래 눌림");
-                Cursor cursor = getApplicationContext().getContentResolver().query(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, MusicInfoLoadUtil.projection, MediaStore.Audio.Media.ARTIST + " != ? ", new String[]{MediaStore.UNKNOWN_STRING}, null);
+                //TODO DB 이용하게끔..
+                Cursor cursor = myMusicFacade.getAllMusicList();
+                //Cursor cursor = getApplicationContext().getContentResolver().query(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, MusicInfoLoadUtil.projection, MediaStore.Audio.Media.ARTIST + " != ? ", new String[]{MediaStore.UNKNOWN_STRING}, null);
                 mSearchAdapter = new SearchAdapter(getApplicationContext(), cursor, true);
                 mAddPlaylistListView.setAdapter(mSearchAdapter);
                 mNotifyTextView.setVisibility(View.GONE);
@@ -113,10 +118,16 @@ public class AddPlaylistActivity extends AppCompatActivity implements SearchView
     }
 
 
+    /**
+     * 재생목록 추가화면에서 검색 시, 실행되는 메소드
+     * @param query  검색어
+     */
     @Override
     public boolean onQueryTextSubmit(String query) {
         Toast.makeText(AddPlaylistActivity.this, getString(R.string.keyword) + query, Toast.LENGTH_SHORT).show();
-        Cursor result = MusicInfoLoadUtil.search(getApplicationContext(), query);
+        //Cursor result = MusicInfoLoadUtil.search(getApplicationContext(), query);
+        Cursor result = myMusicFacade.getMusicList(query);
+        //TODO 음원 테이블 서칭하는 로직으로 변경.
         mUserDefinitionPlaylist.clear();
         mAddPlaylistFab.setVisibility(View.GONE);
         if (result == null || result.getCount() == 0) {
@@ -221,11 +232,11 @@ public class AddPlaylistActivity extends AppCompatActivity implements SearchView
         @Override
         public void bindView(View view, Context context, final Cursor cursor) {
             final ViewHolder viewHolder = (ViewHolder)view.getTag();
-            viewHolder.searchArtistTextView.setText(cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.ARTIST)));
-            viewHolder.searchTitleTextView.setText(cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.TITLE)));
+            viewHolder.searchArtistTextView.setText(cursor.getString(cursor.getColumnIndexOrThrow(MyMusicContract.COLUMN_NAME_ARTIST_NAME)));
+            viewHolder.searchTitleTextView.setText(cursor.getString(cursor.getColumnIndexOrThrow(MyMusicContract.COLUMN_NAME_MUSIC_NAME)));
             mAsyncBitmapLoader.loadBitmap(cursor.getPosition(), viewHolder.searchAlbumImageView);
 
-            long id = cursor.getLong(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media._ID));
+            long id = cursor.getLong(cursor.getColumnIndexOrThrow(MyMusicContract._ID));
             if(mUserDefinitionPlaylist.contains(id)) {
                 viewHolder.searchBorder.setBackgroundResource(R.drawable.image_border);
             } else {
