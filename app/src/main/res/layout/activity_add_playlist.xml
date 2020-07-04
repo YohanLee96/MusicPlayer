@@ -15,13 +15,13 @@
         android:fastScrollEnabled="true"
         android:scrollbarStyle="outsideInset" />
 
-    <TextView
-        android:id="@+id/add_playlist_tv"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:gravity="center"
-        android:text="@string/notify_search"
-        android:textSize="36sp" />
+        <TextView
+            android:id="@+id/add_playlist_tv"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:text="@string/notify_search"
+            android:textSize="36sp" />
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/add_playlist_fab"

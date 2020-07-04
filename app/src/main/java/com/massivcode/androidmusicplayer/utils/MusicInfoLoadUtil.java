@@ -85,8 +85,8 @@ public class MusicInfoLoadUtil {
         Cursor cursor = context.getContentResolver().query(
                 MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
                 projection,
-                MediaStore.Audio.Media.ARTIST + " != ? AND " + MediaStore.Audio.Media.TITLE + " NOT LIKE '%" + "hangout" + "%'" ,
-                new String[]{MediaStore.UNKNOWN_STRING},
+                MediaStore.Audio.Media.TITLE + " NOT LIKE '%" + "hangout" + "%'" ,
+                new String[]{"hangout"},
                 null);
 //        Cursor cursor = context.getContentResolver().query(
 //                audioContentUri,
@@ -152,10 +152,6 @@ public class MusicInfoLoadUtil {
     public static ArrayList<MusicInfo> switchAllMusicInfoToSelectedMusicInfo(HashMap<Long, MusicInfo> origin, ArrayList<Long> keys) {
         ArrayList<MusicInfo> list = new ArrayList<>();
 
-        Log.d(TAG, "allMusicInfo.size : " + origin.size());
-        Log.d(TAG, "keys.size : " + keys.size());
-
-
         for (int i = 0; i < keys.size(); i++) {
 
             long key;
@@ -194,6 +190,7 @@ public class MusicInfoLoadUtil {
 
     public static ArrayList<MusicInfo> getMusicInfoByIds(Context context, ArrayList<Long> ids) {
         ArrayList<MusicInfo> list = new ArrayList<>();
+
 
         for (Long id : ids) {
             MusicInfo musicInfo = new MusicInfo();

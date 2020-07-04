@@ -57,7 +57,7 @@ public class MyMusicFacade {
     public MyMusicFacade(Context context) {
         mHelper = DbHelper.getInstance(context);
         mContext = context;
-    }
+}
 
     public Cursor getMusicList(String keyWord) {
         SQLiteDatabase db = mHelper.getReadableDatabase();

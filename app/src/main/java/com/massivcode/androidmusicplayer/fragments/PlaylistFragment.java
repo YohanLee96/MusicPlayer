@@ -167,7 +167,6 @@ public class PlaylistFragment extends Fragment implements AdapterView.OnItemLong
         } else if(itemType ==1){
             Log.d(TAG, "자식뷰가 롱클릭 되었습니다.");
             String _id = itemData.getString(itemData.getColumnIndexOrThrow(MyPlaylistContract.MyPlaylistEntry._ID));
-            //TODO 재생목록 단일Mp3파일 삭제 로직 추가
             showConfirmDialog(_id, itemType);
         }else {
             Log.d(TAG, "그냥 이유없이 롱클릭되었습니다. 왜지....");

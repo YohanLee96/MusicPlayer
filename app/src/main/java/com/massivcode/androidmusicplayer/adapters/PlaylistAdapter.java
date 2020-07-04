@@ -98,7 +98,6 @@ public class PlaylistAdapter extends CursorTreeAdapter implements AsyncBitmapLoa
         return view;
     }
 
-    //TODO 뷰 바인딩
     @Override
     protected void bindGroupView(View view, Context context, Cursor cursor, boolean isExpanded) {
 

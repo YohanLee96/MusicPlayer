@@ -103,7 +103,6 @@ public class AddPlaylistActivity extends AppCompatActivity implements SearchView
         switch (id) {
             case R.id.action_songs:
                 Log.d(TAG, "노래 눌림");
-                //TODO DB 이용하게끔..
                 Cursor cursor = myMusicFacade.getAllMusicList();
                 //Cursor cursor = getApplicationContext().getContentResolver().query(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, MusicInfoLoadUtil.projection, MediaStore.Audio.Media.ARTIST + " != ? ", new String[]{MediaStore.UNKNOWN_STRING}, null);
                 mSearchAdapter = new SearchAdapter(getApplicationContext(), cursor, true);
@@ -127,7 +126,6 @@ public class AddPlaylistActivity extends AppCompatActivity implements SearchView
         Toast.makeText(AddPlaylistActivity.this, getString(R.string.keyword) + query, Toast.LENGTH_SHORT).show();
         //Cursor result = MusicInfoLoadUtil.search(getApplicationContext(), query);
         Cursor result = myMusicFacade.getMusicList(query);
-        //TODO 음원 테이블 서칭하는 로직으로 변경.
         mUserDefinitionPlaylist.clear();
         mAddPlaylistFab.setVisibility(View.GONE);
         if (result == null || result.getCount() == 0) {

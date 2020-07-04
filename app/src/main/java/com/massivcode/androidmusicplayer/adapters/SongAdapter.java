@@ -90,8 +90,6 @@ public class SongAdapter extends CursorAdapter implements AsyncBitmapLoader.Bitm
 
         return view;
     }
-
-    //TODO 뷰 바인딩
     @Override
     public void bindView(View view, Context context, Cursor cursor) {
 

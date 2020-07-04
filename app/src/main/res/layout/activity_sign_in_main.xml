@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright 2020. Pureum Choe
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~    http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="50dp"
+    android:gravity="center">
+
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="#000000"
+        android:text="학번(ID)" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <EditText
+            android:id="@+id/edit_department_no"
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:inputType="number"
+            android:layout_marginBottom="20dp"
+            android:hint="학번을 입력하세요" />
+
+        <Button
+            android:id="@+id/btn_duplicate_check"
+            android:layout_width="80dp"
+            android:layout_height="wrap_content"
+            android:background="?attr/colorPrimary"
+            android:textColor="#ffffff"
+            android:text="중복확인" />
+    </LinearLayout>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="#000000"
+        android:text="비밀번호" />
+
+    <EditText
+        android:id="@+id/edit_password"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:inputType="textWebPassword"
+        android:layout_marginBottom="20dp"
+        android:hint="4글자 이상" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="#000000"
+        android:text="비밀번호" />
+
+    <EditText
+        android:id="@+id/edit_password_confirm"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:inputType="textWebPassword"
+        android:layout_marginBottom="20dp"
+        android:hint="비밀번호를 확인하세요" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="#000000"
+        android:text="학과(전공)" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <Spinner
+            android:id="@+id/spinner_department"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="20dp"
+            android:entries="@array/학과" />
+
+
+    </LinearLayout>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="#000000"
+        android:text="이름"/>
+
+    <EditText
+        android:id="@+id/edit_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:inputType="textPersonName"
+        android:layout_marginBottom="20dp"
+        android:hint="이름을 입력하세요" />
+
+    <Button
+        android:id="@+id/btn_confirm"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_marginTop="20dp"
+        android:background="?attr/colorPrimary"
+        android:textColor="#ffffff"
+        android:layout_marginBottom="10dp"
+        android:text="회원가입" />
+
+    <Button
+        android:id="@+id/btn_back"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="?attr/colorPrimary"
+        android:textColor="#ffffff"
+        android:text="뒤로가기" />
+
+
+</LinearLayout>

@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="50dp">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="96dp"
+        android:textColor="#000000"
+        android:inputType="number"
+        android:text="ID(학번사용)"
+        android:layout_marginLeft="24dp" />
+
+    <EditText
+        android:id="@+id/member_id"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        android:layout_marginEnd="24dp"
+        android:inputType="number"
+        android:hint="입력해주세요."
+        android:selectAllOnFocus="true" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="24dp"
+        android:textColor="#000000"
+        android:text="PW" />
+
+    <EditText
+        android:id="@+id/member_password"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        android:layout_marginEnd="24dp"
+        android:hint="입력해주세요."
+        android:inputType="textPassword"
+        android:selectAllOnFocus="true"
+        android:layout_marginBottom="20dp"/>
+
+    <Button
+        android:id="@+id/btn_login"
+        android:layout_width="120dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:background="?attr/colorPrimary"
+        android:textColor="#ffffff"
+        android:layout_marginBottom="10dp"
+        android:text="로그인"/>
+
+    <Button
+        android:id="@+id/btn_sign_in"
+        android:layout_width="120dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:background="?attr/colorPrimary"
+        android:textColor="#ffffff"
+        android:text="회원가입"/>
+
+    <ProgressBar
+        android:id="@+id/loading"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="64dp"
+        android:layout_marginEnd="32dp"
+        android:layout_marginBottom="64dp"
+        android:visibility="gone"/>
+
+
+</LinearLayout>
